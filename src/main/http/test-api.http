@@ -1,0 +1,11 @@
+### 视频上传
+POST http://localhost:8081/file/save
+
+### 视频与关联信息上传
+POST http://localhost:8081/file/upload
+
+### 视频展示
+POST http://localhost:8081/file/list
+
+### 检测模型数据上传地址
+GET https://localhost:8081/db/update

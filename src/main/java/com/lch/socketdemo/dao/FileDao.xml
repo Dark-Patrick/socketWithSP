@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lch.socketdemo.dao.FileDao">
+    <insert id="insertFile">
+        insert into file_path (path) values (#{path})
+    </insert>
+
+    <insert id="insertRecord">
+        insert into vedio_record (boilerName, detectionTime, detectionDuration, videoId)
+        values (#{boilerName},#{detectionTime},#{detectionDuration},#{videoId})
+    </insert>
+
+    <select id="listMyFile" resultType="com.lch.socketdemo.entity.FileRecord">
+        select * from vedio_record order by id desc limit 10;
+    </select>
+
+</mapper>
