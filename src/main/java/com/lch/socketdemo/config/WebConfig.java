@@ -2,6 +2,7 @@ package com.lch.socketdemo.config;
 
 import com.lch.socketdemo.handler.MyInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -30,5 +31,16 @@ public class WebConfig  implements WebMvcConfigurer {
                 .excludePathPatterns("/user/login", "/user/register", "/server/**", "/files/**", "/alipay/**",
                         "/doc.html", "/webjars/**", "/swagger-resources/**");
 
+    }
+
+    //允许跨域的配置类信息
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true)
+                .maxAge(3600)
+                .allowedHeaders("*");
     }
 }

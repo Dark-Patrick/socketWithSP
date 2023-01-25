@@ -1,45 +1,31 @@
 package com.lch.socketdemo.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 public class JWTUtil {
-    private static final String SIGN = "!@_@LCH^-^hello!";
-    /**
-     * 生成token header.payload.sign
-     */
-    public static String getToken(Map<String, String> map){
-        Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE, 1);//一天过期
 
-        JWTCreator.Builder builder = JWT.create();
+    private static long time = 1000*60*60*24;
+    private static String signature = "LCH@_@-Hello!";
 
-        map.forEach((k, v)->{
-            builder.withClaim(k, v);
-        });
-
-        String token = builder.withExpiresAt(instance.getTime())
-                .sign(Algorithm.HMAC256(SIGN));
-        return token;
-    }
-
-//    /**
-//     * 验证Token
-//     */
-//    public static void verifyToken(String token){
-//        JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
-//    }
-
-    /**
-     * 获取Token信息
-     */
-    public static DecodedJWT getTokenInfo(String token){
-        return JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
+    public static String createToken(String userName, String password){
+        JwtBuilder jwtBuilder = Jwts.builder();
+        String jwtToken = jwtBuilder
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS256")
+                .claim("userName", userName)
+                .claim("role", "admin")
+                .setSubject("admin-test")
+                .setExpiration(new Date(System.currentTimeMillis() + time))
+                .setId(UUID.randomUUID().toString())
+                .signWith(SignatureAlgorithm.HS256, signature)
+                .compact();
+        return jwtToken;
     }
 }
