@@ -4,6 +4,7 @@ import com.lch.socketdemo.entity.User;
 import com.lch.socketdemo.exception.LoginException;
 import com.lch.socketdemo.utils.JWTUtil;
 import com.lch.socketdemo.web.service.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,12 @@ public class UserController {
             map.put("userName", e.getMessage());
         }
         return map;
+    }
+
+    @GetMapping("/checkToken")
+    public Boolean checkToken(HttpServletRequest request){
+        String token = request.getHeader("token");
+        return  JWTUtil.checkToken(token);
     }
 
 }

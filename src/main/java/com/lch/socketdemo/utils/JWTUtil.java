@@ -1,8 +1,6 @@
 package com.lch.socketdemo.utils;
 
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,5 +25,17 @@ public class JWTUtil {
                 .signWith(SignatureAlgorithm.HS256, signature)
                 .compact();
         return jwtToken;
+    }
+
+    public static boolean checkToken(String token){
+        if(token == null) return false;
+
+        try {
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(signature).parseClaimsJws(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
