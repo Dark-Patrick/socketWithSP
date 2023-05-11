@@ -3,14 +3,13 @@ package com.lch.socketdemo.component;
 import com.alibaba.fastjson.JSON;
 import com.lch.socketdemo.entity.Model;
 import com.lch.socketdemo.web.service.FileService;
+import com.lch.socketdemo.web.service.UserService;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.websocket.*;
@@ -32,10 +31,13 @@ public class WebSocketServer {
 
     @Resource
     private FileService fileService;
+    @Resource
+    private UserService userService;
 
+//    @Transactional
     @RequestMapping(value = "/db/update", method = RequestMethod.GET)
-    public void updateDb(){
-        System.out.println("数据库更新！！！");
+    public void updateDb(@RequestParam("name") String name, @RequestParam("camera")String camera){
+        System.out.println("员工ID" + name + "摄像头：" + camera);
         //onMessage("数据库更新", null, "lch");
 //        Model testModel = new Model();
 //        testModel.setCl("2022-2-24");
@@ -47,14 +49,18 @@ public class WebSocketServer {
 //        result.put("des", testModel.getDes());
 //        result.put("id", testModel.getId());
 
-
-        Model models = fileService.listRecord();
-        String json = JSON.toJSONString(models);
-        sendAllMessage(json);
-        System.out.println(json);
-//        System.out.println(result.toString());
-
-
+        /*        接收到模型的的数据：员工id， 摄像头id，插入记录表
+          根据id查询两表，对比两者级别 反馈给前端员工信息，识别地点，识别时间，行为分析
+        * */
+            Model model = userService.getModelRec(Integer.parseInt(camera), name);
+            userService.insertRecord(camera, name, model.getDes());
+            String json = JSON.toJSONString(model);
+            sendAllMessage(json);
+            System.out.println(json);
+//            测试用句
+//            Model modelTest = fileService.listRecord();
+//            String test = JSON.toJSONString(modelTest);
+//            System.out.println(test);
     }
 
     /**

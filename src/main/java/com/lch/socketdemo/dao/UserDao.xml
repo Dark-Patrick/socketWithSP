@@ -7,4 +7,27 @@
     <select id="getUser" resultType="com.lch.socketdemo.entity.User">
         select userName, password from user where userName = #{userName} and password = #{password};
     </select>
+
+    <select id="getCamera" resultType="com.lch.socketdemo.entity.Camera">
+        select cid, ip, level, locx, locy, cname
+        from camera where cid = #{cid}
+    </select>
+
+    <select id="getEmployee" resultType="com.lch.socketdemo.entity.Employee">
+        select eid, name, level
+        from employee where eid = #{eid}
+    </select>
+
+    <select id="listCamera" resultType="com.lch.socketdemo.entity.Camera">
+        select * from camera order by cid limit #{index},#{size}
+    </select>
+
+    <insert id="insertCamera">
+        insert into camera (ip, level, locx, locy, time, cname)
+        values (#{ip}, #{level}, #{locx}, #{locy}, #{time}, #{cname})
+    </insert>
+
+    <delete id="deleteCamera">
+        delete from camera where cid = #{cid}
+    </delete>
 </mapper>

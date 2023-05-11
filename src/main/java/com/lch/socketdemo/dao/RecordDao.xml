@@ -7,4 +7,18 @@
     <select id="listRecord" resultType="com.lch.socketdemo.entity.Model">
         select * from record order by id desc limit 1;
     </select>
+
+    <insert id="insertRecord">
+        insert into record (category, cl, des, time)
+        values (#{category}, #{cl}, #{des}, #{time})
+    </insert>
+
+    <select id="getPath" resultType="com.lch.socketdemo.entity.Pojo4Path">
+        select e.`name` as `name`, c.cname as cname, c.locx as locx, c.locy as locy,
+        r.des as des, r.time as time from `employee` as e
+        left join record as r on r.category = e.eid
+        left join camera as c on r.cl = c.cid
+        where e.eid = #{name} and r.time like "%"#{time}"%"
+        order by r.id
+    </select>
 </mapper>
