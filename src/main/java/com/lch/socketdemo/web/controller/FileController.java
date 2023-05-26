@@ -36,26 +36,26 @@ public class FileController {
             return map;
         }
         //文件上传的地址
-        String path = ResourceUtils.getURL("classpath:").getPath()+"static/upload";
-        String realPath = path.replace('/', '\\').substring(1,path.length());
+//        String path = ResourceUtils.getURL("classpath:").getPath()+"static/upload";
+//        String realPath = path.replace('/', '\\').substring(1,path.length());
+
+        //根据linux上线优化
+        String runPath = new File(ResourceUtils.getURL("classpath:").getPath()).getParentFile().getParentFile().getParent().replace("file:", "")+"/static/upload";
 
         String originalFileName = file.getOriginalFilename();
         assert originalFileName != null;
         String newFileName = UUID.randomUUID() + originalFileName.substring(originalFileName.lastIndexOf("."));
 
-        File filePath = new File(realPath, newFileName);
+        File filePath = new File(runPath,newFileName);
+        System.out.println("目录：" + filePath);
         if(!filePath.getParentFile().exists() || !filePath.getParentFile().isDirectory()){
             filePath.getParentFile().mkdirs();
             System.out.println("创建目录：" + filePath);
         }
-
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
-        System.out.println(basePath);
         MyFile myFile = new MyFile();
         myFile.setPath(newFileName);
         if(fileService.upload(myFile)){
             file.transferTo(filePath);
-            String url = realPath;
             map.put("success", true);
             map.put("path", newFileName);
             return map;
